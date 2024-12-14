@@ -1,3 +1,4 @@
+
 public class Axel {
     public static final double MAX_FALL_SPEED = -20;
     public static final double JUMP_SPEED = 20;
@@ -49,25 +50,35 @@ public class Axel {
     }
 
     public void update() {
-        if (falling) {
-            y += Math.max(MAX_FALL_SPEED, y - GRAVITY);
-        }
         if (jumping) {
-            y -= JUMP_SPEED;
+            System.out.println("Jumping!");
+            y -= (int) JUMP_SPEED;
             jumping = false; // désactiver le saut après une mise à jour
-        }
-        if (left) {
-            x -= LATERAL_SPEED;
-        }
-        if (right) {
-            x += LATERAL_SPEED;
+        } else {
+            boolean onBlock = false;
+            for (Block block : field.getBlocks()) {
+                if (block.collidesWith(x, y + 1, GamePanel.getAxelWidth(), GamePanel.getAxelHeight())) {
+                    onBlock = true;
+                    break;
+                }
+            }
+            if (!onBlock) {
+                System.out.println("Falling...");
+                y += (int) GRAVITY;
+            }
         }
     
-        // Vérifier les limites du terrain
-        if (y > field.height) {
-            surviving = false; // Axel est tombé
+        if (left) {
+            System.out.println("Moving Left...");
+            x = Math.max(0, x - (int) LATERAL_SPEED);
+        }
+        if (right) {
+            System.out.println("Moving Right...");
+            x = Math.min(field.width - GamePanel.getAxelWidth(), x + (int) LATERAL_SPEED);
         }
     }
     
+    
+    
+    
 }
-
