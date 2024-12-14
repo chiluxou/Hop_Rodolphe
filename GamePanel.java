@@ -34,7 +34,7 @@ public void paintComponent(Graphics g) {
     g.fillRect(axel.getX(), axel.getY(), GamePanel.AXEL_WIDTH, GamePanel.AXEL_HEIGHT);
 
     // Dessiner les blocks
-    g.setColor(Color.BLUE);
+    g.setColor(Color.BLACK);
     for (Block block : field.getBlocks()) {
         g.fillRect(block.getX(), block.getY(), block.getWidth(), BLOCK_HEIGHT);
     }
