@@ -1,6 +1,5 @@
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 public class Hop {
     public static final int WIDTH = 400;
@@ -15,15 +14,19 @@ public class Hop {
 
     public Hop() {
         this.field = new Field(WIDTH, HEIGHT);
-        this.axel = new Axel(field, WIDTH / 2, field.START_ALTITUDE);
+        Block bottomBlock = field.getBlocks().get(0);
+        this.axel = new Axel(field, bottomBlock.getX() + (bottomBlock.getWidth() / 2), 
+                             bottomBlock.getY() - GamePanel.getAxelHeight());
         this.gamePanel = new GamePanel(field, axel);
-
+    
         this.frame = new JFrame("Hop!");
         frame.add(gamePanel);
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
+    
 
     public boolean over() {
         return false;
