@@ -7,7 +7,7 @@ public class Field {
      public static final int ALTITUDE_GAP = 80; // Vertical gap between blocks
      public static final int START_ALTITUDE = 40; // Initial altitude for the first block
      public static final int MAX_BLOCK_WIDTH = 100; // Maximum width of a block
-     public static final int MIN_BLOCK_WIDTH = 40;  // Minimum width of a block
+     public static final int MIN_BLOCK_WIDTH = 50;  // Minimum width of a block
 
     
 
