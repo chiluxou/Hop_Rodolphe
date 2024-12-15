@@ -21,53 +21,44 @@ public class Axel {
 
     
 
-    public void update() {
+    public void update(Field field) {
         boolean onBlock = false;
     
-        // Vérifier si Axel est sur un bloc (collision par le bas)
+        // Vérifie la collision vers le bas (Axel touche un bloc par en dessous)
         for (Block block : field.getBlocks()) {
-            if (block.collidesWith(x, y + GamePanel.getAxelHeight(), GamePanel.getAxelWidth(), 1)) {
-                onBlock = true;
-                y = block.getY() - GamePanel.getAxelHeight(); // Se poser sur le bloc
-                velocityY = 0; // Réinitialiser la vitesse verticale
-                break;
-            }
-        }
-    
-        // Appliquer le saut uniquement si Axel est sur un bloc
-        if (jumping && onBlock) {
-            velocityY = JUMP_SPEED; // Vitesse initiale du saut
-            jumping = false;        // Désactiver le saut
-        }
-    
-        // Vérifier les collisions vers le haut (pendant la montée)
-        if (velocityY < 0) { // Si Axel monte
-            for (Block block : field.getBlocks()) {
-                if (block.collidesWith(x, y + velocityY, GamePanel.getAxelWidth(), GamePanel.getAxelHeight())) {
-                    velocityY = 0; // Arrêter la montée
-                    y = block.getY() + Field.BLOCK_HEIGHT; // Ajuster la position sous le bloc
-                    break;
+            if (block.collidesWith(x, y + velocityY, GamePanel.getAxelWidth(), GamePanel.getAxelHeight())) {
+                if (velocityY > 0) { // Collision en descendant
+                    y = block.getY() - GamePanel.getAxelHeight(); // Placer Axel sur le bloc
+                    velocityY = 0; // Arrêter la chute
+                    onBlock = true;
+                } else if (velocityY < 0) { // Collision en montant
+                    y = block.getY() + Field.getBlockHeight(); // Placer Axel en dessous du bloc
+                    velocityY = MAX_FALL_SPEED; // Inverser la vitesse pour un "rebond"
                 }
             }
         }
     
         // Appliquer la gravité si Axel n'est pas sur un bloc
         if (!onBlock) {
-            velocityY += GRAVITY; // Ajouter la gravité à la vitesse verticale
-            velocityY = Math.min(velocityY, MAX_FALL_SPEED); // Limiter la vitesse de chute
+            velocityY = Math.min(velocityY + GRAVITY, MAX_FALL_SPEED);
         }
     
-        // Mettre à jour la position verticale
-        y += velocityY;
+        // Gestion du saut
+        if (jumping && onBlock) {
+            velocityY = JUMP_SPEED;
+            jumping = false; // Désactiver le saut après l'initiation
+        }
     
-        // Gérer les déplacements horizontaux
-        if (left) {
-            x = Math.max(0, x - LATERAL_SPEED);
-        }
-        if (right) {
-            x = Math.min(field.width - GamePanel.getAxelWidth(), x + LATERAL_SPEED);
-        }
+        y += velocityY; // Appliquer la vélocité verticale
+    
+        // Déplacement horizontal
+        if (left) x = Math.max(0, x - LATERAL_SPEED);
+        if (right) x = Math.min(field.getWidth() - GamePanel.getAxelWidth(), x + LATERAL_SPEED);
     }
+    
+    
+    
+    
     
     
 
