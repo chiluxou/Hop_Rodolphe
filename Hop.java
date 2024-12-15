@@ -1,49 +1,49 @@
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.Timer;
 
 public class Hop {
-    private final Field field;
-    private final Axel axel;
-    private final GamePanel gamePanel;
-    public int score = 0;
-    private Timer timer;
+    private final Timer timer; // Le Timer principal
+    private final Timer startDelay; // Le Timer de délai
 
     public Hop() {
-        field = new Field(400, 600);
-        Block firstBlock = field.getBlocks().get(0);
-        axel = new Axel(field, firstBlock.getX() + firstBlock.getWidth() / 2, firstBlock.getY() - GamePanel.getAxelHeight());
+        Field field = new Field(400, 600);
 
-        gamePanel = new GamePanel(field, axel);
+        if (field.getBlocks().isEmpty()) {
+            System.err.println("Erreur : Aucun bloc généré !");
+            System.exit(1);
+        }
+
+        Block firstBlock = field.getBlocks().get(0);
+        Axel axel = new Axel(field, firstBlock.getX() + firstBlock.getWidth() / 2,
+                             firstBlock.getY() - GamePanel.getAxelHeight());
+        GamePanel gamePanel = new GamePanel(field, axel);
+
         JFrame frame = new JFrame("Hop!");
         frame.add(gamePanel);
+        frame.setResizable(false);
         frame.pack();
+        frame.setSize(field.getWidth(), field.getHeight());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        Timer timer = new Timer(16, e -> round());
-        timer.start();
-    }
+        // Initialise le Timer principal
+        timer = new Timer(16, e -> {
+            axel.update(field);
+            field.update();
+            gamePanel.repaint();
+        });
 
-    public void round() {
-        axel.update(); // Mettre à jour Axel (déplacement, saut, gravité)
-        field.update(); // Mettre à jour les blocs (défilement et génération)
-    
-        // Vérifier si le jeu est terminé
-        if (over()) {
-            timer.stop();
-            System.out.println("Game Over! Score final : " + score);
-        }
-    
-        gamePanel.repaint(); // Rafraîchir l'affichage
-        score++;
+        // Timer pour le délai de 3 secondes
+        startDelay = new Timer(3000, e -> {
+            timer.start(); // Démarre le jeu après le délai
+            ((Timer) e.getSource()).stop();
+        });
+
+        startDelay.start(); // Démarre le Timer de délai
     }
-    
 
     public static void main(String[] args) {
         new Hop();
     }
-
-    public boolean over() {
-        return !axel.isSurviving(); // Retourne true si Axel n'est plus en vie
-    }
 }
-
