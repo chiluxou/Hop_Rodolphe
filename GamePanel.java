@@ -19,7 +19,9 @@ public class GamePanel extends JPanel implements KeyListener{
         addKeyListener(this); // Attach the KeyListener
         setFocusable(true);   // Ensure panel is focusable
         requestFocusInWindow(); // Request focus for key events
+        requestFocus();         // Ajout pour garantir la détection des touches
     }
+    
     
     
     public static int getAxelWidth() {
