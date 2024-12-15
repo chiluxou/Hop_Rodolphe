@@ -1,9 +1,10 @@
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class Hop {
-    private final Timer timer; // Le Timer principal
-    private final Timer startDelay; // Le Timer de délai
+    private Timer timer; // Enlever final
+    private boolean gameStarted = false; // État du jeu : faux au début
 
     public Hop() {
         Field field = new Field(400, 600);
@@ -27,23 +28,34 @@ public class Hop {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        // Initialise le Timer principal
         timer = new Timer(16, e -> {
-            axel.update(field);
-            field.update();
-            gamePanel.repaint();
+            // Vérifier si Axel a quitté le premier bloc
+            if (!gameStarted) {
+                if (axel.getY() < firstBlock.getY() - GamePanel.getAxelHeight()) {
+                    gameStarted = true; // Le jeu démarre quand Axel quitte le premier bloc
+                }
+            } else {
+                // Jeu en cours : faire défiler les blocs et vérifier la condition Game Over
+                if (!axel.isAlive()) {
+                    timer.stop();
+                    JOptionPane.showMessageDialog(frame, "Game Over!", "Fin de la partie", JOptionPane.INFORMATION_MESSAGE);
+                    System.exit(0);
+                }
+                field.update(); // Faire défiler les blocs seulement si le jeu a commencé
+            }
+        
+            axel.update(field); // Axel peut toujours se déplacer
+            gamePanel.repaint(); // Toujours redessiner
         });
+        
 
-        // Timer pour le délai de 3 secondes
-        startDelay = new Timer(3000, e -> {
-            timer.start(); // Démarre le jeu après le délai
-            ((Timer) e.getSource()).stop();
-        });
-
-        startDelay.start(); // Démarre le Timer de délai
+        timer.start();
     }
 
     public static void main(String[] args) {
         new Hop();
     }
 }
+
+
+
