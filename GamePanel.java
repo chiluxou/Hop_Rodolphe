@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements KeyListener{
         this.field = field;
         this.axel = axel;
     
-        setPreferredSize(new Dimension(field.width, field.height));
+        setPreferredSize(new Dimension(field.getWidth(), field.getHeight()));
         addKeyListener(this); // Attach the KeyListener
         setFocusable(true);   // Ensure panel is focusable
         requestFocusInWindow(); // Request focus for key events
@@ -33,20 +33,25 @@ public class GamePanel extends JPanel implements KeyListener{
 
 
 
-@Override
-public void paintComponent(Graphics g) {
-    super.paintComponent(g);
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    
+        // Dessiner Axel
+        g.setColor(Color.BLACK);
+        g.fillOval(axel.getX(), axel.getY(), AXEL_WIDTH, AXEL_HEIGHT);
+    
+        // Dessiner les blocs
+        g.setColor(Color.BLACK);
+        for (Block block : field.getBlocks()) {
+            g.fillRect(block.getX(), block.getY(), block.getWidth(), BLOCK_HEIGHT);
+        }
 
-    // Draw Axel
-    g.setColor(Color.RED);
-    g.fillRect(axel.getX(), axel.getY(), GamePanel.getAxelWidth(), GamePanel.getAxelHeight());
+        
 
-    // Draw blocks
-    g.setColor(Color.BLACK);
-    for (Block block : field.getBlocks()) {
-        g.fillRect(block.getX(), block.getY(), block.getWidth(), BLOCK_HEIGHT);
     }
-}
+    
+
 
 
 @Override
