@@ -1,10 +1,12 @@
+
 public class Block {
     private int x, y;
 
     public final int width; // Dimensions of the field
 
     public static final int ALTITUDE_GAP = 80; // Gap between blocks
-    public static final int START_ALTITUDE = 40; // Lowest altitude to start placing blocks
+    public static final int START_ALTITUDE = 100; // Le premier bloc commence plus haut
+
     private static final int MAX_BLOCK_WIDTH = 100;
     private static final int MIN_BLOCK_WIDTH = 50;
 
@@ -16,6 +18,10 @@ public class Block {
 
     public int getX() {
         return this.x;
+    }
+
+    public int setX(int x) {
+        return this.x=x;
     }
 
     public int getY() {
